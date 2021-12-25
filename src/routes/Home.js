@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
 import Movie from "../components/Movie";
 import styled from "styled-components";
+import { useQuery } from "react-query";
+import { fetchMovie } from "../Api";
 
 const Container = styled.div`
   height: 100%;
@@ -32,7 +33,8 @@ const Movies = styled.div`
 `;
 
 const Home = () => {
-  const [loading, setLoading] = useState(true);
+  const {isLoading, data : movies} = useQuery("allMovies" , fetchMovie);
+  /* const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const getMovie = async () => {
     const json = await (
@@ -42,7 +44,7 @@ const Home = () => {
     ).json();
     setMovies(json.data.movies);
     setLoading(false);
-  };
+  }; */
   /* fetch then을 이용한 json 뽑아오기
   useEffect(() => {
     fetch(
@@ -54,19 +56,18 @@ const Home = () => {
         setLoading(false);
       });
   }); */
-  useEffect(() => {
-    getMovie();
-  }, []);
-  console.log(movies);
+  /* useEffect(() => {
+    fetchMovie()
+  }, []);*/
   return (
     <Container>
-      {loading ? (
+      {isLoading ? (
         <Loader>
           <span>Loading...</span>
         </Loader>
       ) : (
         <Movies>
-          {movies.map((movie) => (
+          {movies.data.movies.map((movie) => (
             <Movie
               key={movie.id}
               id={movie.id}
